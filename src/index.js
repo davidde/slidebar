@@ -14,9 +14,6 @@ class Header extends React.Component {
   render() {
     return (
       <ul id="header">
-        <li id='flex-trigger'>
-
-        </li>
         <li id='flex-header'>
           <h2>Header here</h2>
         </li>
@@ -31,65 +28,16 @@ class Sidebar extends React.Component {
     this.triggerRef = React.createRef();
     this.bgRef = React.createRef();
     this.contentRef = React.createRef();
-    this.state = {
-      
-    };
+
   }
 
-  // handleStuff() {
-  //   // This handles the slider status:
-  //   var sliderTrigger = document.getElementById("slider-trigger");
-    
-
-    
-
-  //   sliderTrigger.addEventListener( "click" , handleSlider);
-  //   sliderBg.addEventListener("click", handleSlider);
-
-  //   // This handles the touch:
-  //   document.addEventListener('touchstart', handleTouchStart, false);
-  //   document.addEventListener('touchmove', handleTouchMove, false);
-
-  //   var xDown = null;
-  //   var yDown = null;
-
-  //   function handleTouchStart(evt) {
-  //       xDown = evt.touches[0].clientX;
-  //       yDown = evt.touches[0].clientY;
-  //   };                                                
-
-  //   function handleTouchMove(evt) {
-  //       if ( !xDown || !yDown ) {
-  //           return;
-  //       }
-
-  //       if ( xDown > ((10/100) * (screen.width)) ) {
-  //         if ( !slider.classList.contains("active")) {
-  //           return;
-  //         }
-  //       }
-
-  //       var xUp = evt.touches[0].clientX;
-  //       var yUp = evt.touches[0].clientY;
-
-  //       var xDiff = xDown - xUp;
-  //       var yDiff = yDown - yUp;
-
-  //       if ( Math.abs(xDiff) > Math.abs(yDiff) ) {
-  //           if ( xDiff > 0 ) {
-  //               /* left swipe */ 
-  //               slider.classList.remove("active");
-  //               sliderBg.classList.remove("active");
-  //           } else {
-  //               /* right swipe */
-  //               slider.classList.add("active");
-  //               sliderBg.classList.add("active");
-  //           }
-  //       }
-  //       xDown = null;
-  //       yDown = null;
-  //   };
-  // }
+  componentDidMount() {
+    // Pass the required refs to App parent component:
+    let passBgRef = this.props.bgRef;
+    passBgRef(this.bgRef);
+    let passContentRef = this.props.contentRef;
+    passContentRef(this.contentRef);
+  }
 
   handleClick = () => {
     let background = this.bgRef.current;
@@ -105,6 +53,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
+
     return (
       <div className='sidebar'>
           <button className="sidebar-trigger" ref={this.triggerRef} onClick={this.handleClick}>
@@ -112,14 +61,95 @@ class Sidebar extends React.Component {
           </button>
           {/* A mock layer to click on and hide menu: */}
           <div className="sidebar-background" ref={this.bgRef} onClick={this.handleClick} />
-          
+
           <div className="sidebar-content" ref={this.contentRef}>
               <button>&times; Close</button>
               <button>&#9776; Navigation</button>
               <button>&#9881; Settings</button>
           </div>
 
-        
+      </div>
+    );
+  }
+}
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      xDown: null,
+      yDown: null,
+      bgRef: null,
+      contentRef: null,
+    };
+  }
+
+  getBgRef = (bgRef) => {
+    this.setState({ bgRef: bgRef });
+  }
+
+  getContentRef = (contentRef) => {
+    this.setState({ contentRef });
+  }
+
+  handleTouchStart = (evt) => {
+      let xDown = evt.touches[0].clientX;
+      let yDown = evt.touches[0].clientY;
+      this.setState({ xDown, yDown });
+  }
+
+  handleTouchMove = (evt) => {
+      let xDown = this.state.xDown;
+      let yDown = this.state.yDown;
+
+      if ( !xDown || !yDown ) {
+          return;
+      }
+
+      let content = this.state.contentRef.current;
+      let bg = this.state.bgRef.current;
+
+      if ( xDown > ((10/100) * (window.screen.width)) ) {
+        if ( !content.classList.contains("active")) {
+          return;
+        }
+      }
+
+      let xUp = evt.touches[0].clientX;
+      let yUp = evt.touches[0].clientY;
+
+      let xDiff = xDown - xUp;
+      let yDiff = yDown - yUp;
+
+      if ( Math.abs(xDiff) > Math.abs(yDiff) ) {
+          if ( xDiff > 0 ) {
+              /* left swipe */ 
+              content.classList.remove("active");
+              bg.classList.remove("active");
+          } else {
+              /* right swipe */
+              content.classList.add("active");
+              bg.classList.add("active");
+          }
+      }
+      xDown = null;
+      yDown = null;
+      this.setState({ xDown, yDown });
+  }
+
+
+  render() {
+
+    return (
+      <div id='app'
+            onTouchStart={this.handleTouchStart}
+            onTouchMove={this.handleTouchMove} >
+            
+          <Header />
+          <Sidebar contentRef={this.getContentRef}
+                   bgRef={this.getBgRef} />
+          <Content />
       </div>
     );
   }
@@ -181,26 +211,6 @@ class Content extends React.Component {
   }
 }
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      
-    };
-  }
-
-  
-
-  render() {
-    return (
-      <div id='app'>
-          <Header />
-          <Sidebar />
-          <Content />
-      </div>
-    );
-  }
-}
 
 //==============================================
 
