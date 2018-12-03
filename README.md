@@ -1,3 +1,15 @@
+# S(l)idebar
+
+This is an experiment to create a modular, responsive React sidebar component.
+
+#### Explicit goals:
+- On **wide viewports** it should be normally visible on the side of the screen. The width should be simple to adapt to different requirements (e.g. small on sites with much content, big on minimal sites).
+- On **small viewports** it should be effectively hidden; tapping/clicking a button in the (left) corner slides out its content.
+- It should be **responsive**; look good on all viewports.
+- It should respond to click, as well as **touch events**.
+- Clicking or touching outside of the sidebar should collapse it.
+- Clicking or touching on the side of the screen should expand it.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
