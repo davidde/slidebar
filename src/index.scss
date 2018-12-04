@@ -36,6 +36,7 @@ $sidebarFontColor: #7d4444;
   width: 0.5rem;
   background-color: $sidebarBgColor;
   grid-area: sidebar;
+  cursor: pointer;
 
   .sidebar-trigger {
     z-index: 10;
@@ -78,6 +79,7 @@ $sidebarFontColor: #7d4444;
     padding: 8rem 1rem 1rem 1rem;
     position: fixed;
     top: 0;
+    cursor: auto;
   
     left: -90vw;
     &.active {

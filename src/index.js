@@ -25,7 +25,9 @@ class Header extends React.Component {
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
-    this.triggerRef = React.createRef();
+    this.state = {
+      isActive: false,
+    };
     this.bgRef = React.createRef();
     this.contentRef = React.createRef();
 
@@ -40,29 +42,38 @@ class Sidebar extends React.Component {
   }
 
   handleClick = () => {
-    let background = this.bgRef.current;
-    let content = this.contentRef.current;
+    let isActive = !this.state.isActive;
+    this.setState({ isActive });
 
-    if (content.classList.contains("active")) {
-      content.classList.remove("active");
-      background.classList.remove("active");
-    } else {
-      content.classList.add("active");
-      background.classList.add("active");
+    // let passSidebarState = this.props.sidebarState;
+    // passSidebarState(isActive);
+  }
+
+  handleSideClick = () => {
+    let isActive = this.state.isActive;
+    if (!isActive) {
+      this.setState({ isActive: !isActive });
+
+      // let passSidebarState = this.props.sidebarState;
+      // passSidebarState(!isActive);
     }
   }
 
   render() {
+    let bgClass = this.state.isActive ? 'sidebar-background active' : 'sidebar-background';
+    let contentClass = this.state.isActive ? 'sidebar-content active' : 'sidebar-content';
 
     return (
-      <div className='sidebar'>
-          <button className="sidebar-trigger" ref={this.triggerRef} onClick={this.handleClick}>
+      <div className='sidebar' onClick={this.handleSideClick}>
+          <button className="sidebar-trigger" onClick={this.handleClick}>
             &#9881;
           </button>
-          {/* A mock layer to click on and hide menu: */}
-          <div className="sidebar-background" ref={this.bgRef} onClick={this.handleClick} />
 
-          <div className="sidebar-content" ref={this.contentRef}>
+          {/* A mock background layer to hide sidebar by clicking on it: */}
+          <div className={bgClass} ref={this.bgRef} onClick={this.handleClick} />
+
+          {/* The content of the sidebar: */}
+          <div className={contentClass} ref={this.contentRef}>
               <button>&times; Close</button>
               <button>&#9776; Navigation</button>
               <button>&#9881; Settings</button>
