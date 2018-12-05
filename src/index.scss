@@ -6,6 +6,10 @@ html, body {
   padding: 0;
   height: 100%;
   max-width: 100vw;
+  .noScroll {
+    // Prevent scrolling when sidebar is showing
+    overflow: hidden;
+  }
 }
 
 #app {
@@ -85,7 +89,7 @@ $sidebarFontColor: #7d4444;
     width: 76vw;
     z-index: 5;
     background-color: $sidebarFillColor;
-    overflow-x: hidden;
+    overflow: hidden;
     padding: 8rem 1rem 1rem 1rem;
     position: fixed;
     top: 0;

@@ -3,85 +3,40 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 
 
-class Header extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      
-    };
-  }
-
-  render() {
-    return (
-      <ul id="header">
-        <li id='flex-header'>
-          <h2>Header here</h2>
-        </li>
-      </ul>
-    );
-  }
+function Header() {
+  return (
+    <ul id="header">
+      <li id='flex-header'>
+        <h2>Header here</h2>
+      </li>
+    </ul>
+  );
 }
 
-class Sidebar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isActive: false,
-    };
-    this.bgRef = React.createRef();
-    this.contentRef = React.createRef();
+function Sidebar(props) {
+  let isActive = props.isActive;
+  let bgClass = isActive ? 'sidebar-background active' : 'sidebar-background';
+  let contentClass = isActive ? 'sidebar-content active' : 'sidebar-content';
+  // Prevent body from scrolling when Sidebar is active:
+  document.body.classList.toggle('noScroll', isActive);
 
-  }
+  return (
+    <div className='sidebar' onClick={props.onSideClick}>
+        <button className="sidebar-trigger" onClick={props.onClick}>
+          &#9881;
+        </button>
 
-  componentDidMount() {
-    // Pass the required refs to App parent component:
-    let passBgRef = this.props.bgRef;
-    passBgRef(this.bgRef);
-    let passContentRef = this.props.contentRef;
-    passContentRef(this.contentRef);
-  }
+        {/* A mock background layer to hide sidebar by clicking on it: */}
+        <div className={bgClass} onClick={props.onClick} />
 
-  handleClick = () => {
-    let isActive = !this.state.isActive;
-    this.setState({ isActive });
-
-    // let passSidebarState = this.props.sidebarState;
-    // passSidebarState(isActive);
-  }
-
-  handleSideClick = () => {
-    let isActive = this.state.isActive;
-    if (!isActive) {
-      this.setState({ isActive: !isActive });
-
-      // let passSidebarState = this.props.sidebarState;
-      // passSidebarState(!isActive);
-    }
-  }
-
-  render() {
-    let bgClass = this.state.isActive ? 'sidebar-background active' : 'sidebar-background';
-    let contentClass = this.state.isActive ? 'sidebar-content active' : 'sidebar-content';
-
-    return (
-      <div className='sidebar' onClick={this.handleSideClick}>
-          <button className="sidebar-trigger" onClick={this.handleClick}>
-            &#9881;
-          </button>
-
-          {/* A mock background layer to hide sidebar by clicking on it: */}
-          <div className={bgClass} ref={this.bgRef} onClick={this.handleClick} />
-
-          {/* The content of the sidebar: */}
-          <div className={contentClass} ref={this.contentRef}>
-              <button>&times; Close</button>
-              <button>&#9776; Navigation</button>
-              <button>&#9881; Settings</button>
-          </div>
-
-      </div>
-    );
-  }
+        {/* The content of the sidebar: */}
+        <div className={contentClass} >
+            <button>&times; Close</button>
+            <button>&#9776; Navigation</button>
+            <button>&#9881; Settings</button>
+        </div>
+    </div>
+  );
 }
 
 
@@ -89,137 +44,135 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      xDown: null,
-      yDown: null,
-      bgRef: null,
-      contentRef: null,
+      sidebarActive: false,
+      clientX: null,
+      clientY: null,
     };
   }
 
-  getBgRef = (bgRef) => {
-    this.setState({ bgRef: bgRef });
+  handleTouchStart = (event) => {
+    // 'touches' returns a list of all the touch objects
+    // that are currently in contact with the surface;
+    // touches[0] indicates that it will only show the
+    // coordinates of one finger (the first).
+    let clientX = event.touches[0].clientX;
+    let clientY = event.touches[0].clientY;
+    this.setState({ clientX, clientY });
   }
 
-  getContentRef = (contentRef) => {
-    this.setState({ contentRef });
-  }
+  handleTouchMove = (event) => {
+    // 'clientX' returns the X coordinate of the touch point
+    // relative to the left edge of the browser viewport,
+    // not including any scroll offset.
+    let clientX = this.state.clientX;
+    // 'clientY' returns the Y coordinate of the touch point
+    // relative to the top edge of the browser viewport,
+    // not including any scroll offset.
+    let clientY = this.state.clientY;
 
-  handleTouchStart = (evt) => {
-      let xDown = evt.touches[0].clientX;
-      let yDown = evt.touches[0].clientY;
-      this.setState({ xDown, yDown });
-  }
+    if ( !clientX || !clientY ) {
+        return;
+    }
 
-  handleTouchMove = (evt) => {
-      let xDown = this.state.xDown;
-      let yDown = this.state.yDown;
-
-      if ( !xDown || !yDown ) {
-          return;
+    if ( clientX > ((25/100) * (window.screen.width)) ) {
+      if ( !this.state.sidebarActive ) {
+        return;
       }
+    }
 
-      let content = this.state.contentRef.current;
-      let bg = this.state.bgRef.current;
+    let xDelta = event.touches[0].clientX - clientX;
+    let yDelta = event.touches[0].clientY - clientY;
 
-      if ( xDown > ((10/100) * (window.screen.width)) ) {
-        if ( !content.classList.contains("active")) {
-          return;
-        }
+    if ( Math.abs(xDelta) > Math.abs(yDelta) ) {
+      // if xDelta > 0: right swipe
+      if (xDelta > 0) {
+        this.setState({ sidebarActive: true });
+      } else {
+        // if xDelta < 0: left swipe
+        this.setState({ sidebarActive: false });
       }
+    }
 
-      let xUp = evt.touches[0].clientX;
-      let yUp = evt.touches[0].clientY;
+    clientX = null;
+    clientY = null;
+    this.setState({ clientX, clientY });
 
-      let xDiff = xDown - xUp;
-      let yDiff = yDown - yUp;
-
-      if ( Math.abs(xDiff) > Math.abs(yDiff) ) {
-          if ( xDiff > 0 ) {
-              /* left swipe */ 
-              content.classList.remove("active");
-              bg.classList.remove("active");
-          } else {
-              /* right swipe */
-              content.classList.add("active");
-              bg.classList.add("active");
-          }
-      }
-      xDown = null;
-      yDown = null;
-      this.setState({ xDown, yDown });
+    event.preventDefault();
   }
 
+  handleClick = () => {
+    let sidebarActive = !this.state.sidebarActive;
+    this.setState({ sidebarActive });
+  }
+
+  handleSideClick = () => {
+    let sidebarActive = this.state.sidebarActive;
+    if (!sidebarActive) {
+      this.setState({ sidebarActive: !sidebarActive });
+    }
+  }
 
   render() {
-
     return (
       <div id='app'
             onTouchStart={this.handleTouchStart}
             onTouchMove={this.handleTouchMove} >
             
           <Header />
-          <Sidebar contentRef={this.getContentRef}
-                   bgRef={this.getBgRef} />
+          <Sidebar isActive={this.state.sidebarActive}
+                   onClick={this.handleClick}
+                   onSideClick={this.handleSideClick} />
           <Content />
       </div>
     );
   }
 }
 
-class Content extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      
-    };
-  }
-
-  render() {
-    return (
-      <div id='content'>
-        <p>Content here ...</p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit, sed do eiusmod tempor
-          incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud
-          xercitation ullamco laboris nisi ut aliquip
-          ex ea commodo consequat. Duis aute irure
-          dolor in reprehenderit in voluptate velit
-          esse cillum dolore eu fugiat nulla pariatur.
-          Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit, sed do eiusmod tempor
-          incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud
-          xercitation ullamco laboris nisi ut aliquip
-          ex ea commodo consequat. Duis aute irure
-          dolor in reprehenderit in voluptate velit
-          esse cillum dolore eu fugiat nulla pariatur.
-          Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit, sed do eiusmod tempor
-          incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud
-          xercitation ullamco laboris nisi ut aliquip
-          ex ea commodo consequat. Duis aute irure
-          dolor in reprehenderit in voluptate velit
-          esse cillum dolore eu fugiat nulla pariatur.
-          Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.
-        </p>
-      </div>
-    );
-  }
+function Content() {
+  return (
+    <div id='content'>
+      <p>Content here ...</p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud
+        xercitation ullamco laboris nisi ut aliquip
+        ex ea commodo consequat. Duis aute irure
+        dolor in reprehenderit in voluptate velit
+        esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia
+        deserunt mollit anim id est laborum.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud
+        xercitation ullamco laboris nisi ut aliquip
+        ex ea commodo consequat. Duis aute irure
+        dolor in reprehenderit in voluptate velit
+        esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia
+        deserunt mollit anim id est laborum.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud
+        xercitation ullamco laboris nisi ut aliquip
+        ex ea commodo consequat. Duis aute irure
+        dolor in reprehenderit in voluptate velit
+        esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia
+        deserunt mollit anim id est laborum.
+      </p>
+    </div>
+  );
 }
 
 
