@@ -28,15 +28,19 @@ html, body {
 //////////////////////////////////
 //       Sidebar Styles:        //
 //////////////////////////////////
-$sidebarBgColor: #250d0d;
+$sidebarFillColor: #250d0d;
 $sidebarFontColor: #7d4444;
 
 .sidebar {
   height: 100%;
   width: 0.5rem;
-  background-color: $sidebarBgColor;
+  background-color: $sidebarFillColor;
   grid-area: sidebar;
   cursor: pointer;
+  @media (hover: none) {
+    // Prevent blue focus on touch devices when tapping 'sidebar-content':
+    cursor: auto;
+  }
 
   .sidebar-trigger {
     z-index: 10;
@@ -45,7 +49,7 @@ $sidebarFontColor: #7d4444;
     height: 4.1rem;
     padding: 0.5rem 1rem 0.8rem 1rem;
     color: $sidebarFontColor;
-    background-color: $sidebarBgColor;
+    background-color: $sidebarFillColor;
     font-size: 2.5rem;
     
     cursor: pointer;
@@ -55,6 +59,12 @@ $sidebarFontColor: #7d4444;
 
     &:hover {
       color: #f1f1f1;
+    }
+    @media (hover: none) {
+      // Prevent color change on touch devices:
+      &:hover {
+        color: $sidebarFontColor;
+      }
     }
   }
   
@@ -74,7 +84,7 @@ $sidebarFontColor: #7d4444;
     height: 100vh;
     width: 76vw;
     z-index: 5;
-    background-color: $sidebarBgColor;
+    background-color: $sidebarFillColor;
     overflow-x: hidden;
     padding: 8rem 1rem 1rem 1rem;
     position: fixed;
@@ -90,7 +100,7 @@ $sidebarFontColor: #7d4444;
     button {
       padding: 0.5rem;
       font-size: 1.2rem;
-      background-color: $sidebarBgColor;
+      background-color: $sidebarFillColor;
       color: $sidebarFontColor;
       display: block;
       border: none;
@@ -99,7 +109,12 @@ $sidebarFontColor: #7d4444;
       &:hover {
         color: #f1f1f1;
       }
-      
+      @media (hover: none) {
+        // Prevent color change on touch devices:
+        &:hover {
+          color: $sidebarFontColor;
+        }
+      }
     }
   }
 }
