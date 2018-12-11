@@ -14,11 +14,10 @@ function Header() {
 }
 
 function Sidebar(props) {
-  let isActive = props.isActive;
-  let bgClass = isActive ? 'sidebar-background active' : 'sidebar-background';
-  let contentClass = isActive ? 'sidebar-content active' : 'sidebar-content';
+  let bgClass = props.isActive ? 'sidebar-background active' : 'sidebar-background';
+  let contentClass = props.isActive ? 'sidebar-content active' : 'sidebar-content';
   // Prevent body from scrolling when Sidebar is active:
-  document.body.classList.toggle('noScroll', isActive);
+  document.body.classList.toggle('noScroll', props.isActive);
 
   return (
     <div className='sidebar' onClick={props.onSideClick}>
@@ -26,7 +25,7 @@ function Sidebar(props) {
           &#9881;
         </button>
 
-        {/* A mock background layer to hide sidebar by clicking on it: */}
+        {/* A mock background layer to hide the sidebar by clicking on it: */}
         <div className={bgClass} onClick={props.onClick} />
 
         {/* The content of the sidebar: */}
