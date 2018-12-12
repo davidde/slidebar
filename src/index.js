@@ -5,11 +5,9 @@ import './index.scss';
 
 function Header() {
   return (
-    <ul id="header">
-      <li id='flex-header'>
+    <div id="header">
         <h2>Header here</h2>
-      </li>
-    </ul>
+    </div>
   );
 }
 
@@ -30,9 +28,13 @@ function Sidebar(props) {
 
         {/* The content of the sidebar: */}
         <div className={contentClass} >
-            <button>&times; Close</button>
-            <button>&#9776; Navigation</button>
-            <button>&#9881; Settings</button>
+            <div className='sidebar-name'>Settings</div>
+            <hr className='line' />
+            <div className='padding'>
+              <button>&times; Close</button>
+              <button>&#9776; Navigation</button>
+              <button>&#9881; Settings</button>
+            </div>
         </div>
     </div>
   );
