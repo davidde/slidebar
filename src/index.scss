@@ -21,6 +21,10 @@ html, body {
   // Set div to full screen:
   height: 100%;
   position: absolute;
+  @media (max-width: 302px) {
+    // Fix Chrome bug on very small desktop viewports:
+    position: static;
+  }
   top: 0;
   left: 0;
   right: 0;
@@ -36,14 +40,30 @@ $sidebarFillColor: #250d0d;
 $sidebarFontColor: #7d4444;
 $sidebarLandscapeWidth: 40vw;
 $sidebarPortraitWidth: 80vw;
+$transitionDuration: 0.5s;
+$mediaQueryWidth: 1200px;
+:export {
+  mediaQueryWidth: 1200;
+}
 
 .sidebar {
-  height: 100%;
-  width: $sidebarLandscapeWidth;
-  background-color: $sidebarFillColor;
   grid-area: sidebar;
-  @media (orientation: portrait), (max-width: 1200px) {
+  height: 100%;
+  background-color: $sidebarFillColor;
+  
+  @media (orientation: landscape), (min-width: $mediaQueryWidth) {
+    width: $sidebarLandscapeWidth;
+    transition: width $transitionDuration;
+    &.landscapePassive {
+      cursor: pointer;
+      width: 0.5rem;
+      transition: width $transitionDuration;
+    }
+  }
+  
+  @media (orientation: portrait), (max-width: $mediaQueryWidth) {
     width: 0.5rem;
+    transition: width $transitionDuration;
     cursor: pointer;
   }
 
@@ -67,10 +87,6 @@ $sidebarPortraitWidth: 80vw;
     outline: none;
     text-decoration: none;
     border: none;
-    // @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    //   // Chrome Specific:
-    //   border-bottom: 2px solid $sidebarFontColor;
-    // }
 
     &:hover {
       color: #f1f1f1;
@@ -83,7 +99,7 @@ $sidebarPortraitWidth: 80vw;
     }
   }
 
-  @media (orientation: portrait), (max-width: 1200px) {
+  @media (orientation: portrait), (max-width: $mediaQueryWidth) {
     .sidebar-background {
       position: fixed;
       top: 0;
@@ -91,7 +107,7 @@ $sidebarPortraitWidth: 80vw;
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
       visibility: hidden;
-      &.active {
+      &.portraitActive {
         visibility: visible;
       }
     }
@@ -103,18 +119,26 @@ $sidebarPortraitWidth: 80vw;
     z-index: 5;
     background-color: $sidebarFillColor;
     overflow: hidden;
-    
     position: fixed;
     top: 0;
     cursor: auto;
   
-    @media (orientation: portrait), (max-width: 1200px) {
-      width: $sidebarPortraitWidth;
-      left: -90vw;
-      &.active {
-        left: 0;
+    @media (orientation: landscape), (min-width: $mediaQueryWidth) {
+      width: $sidebarLandscapeWidth;
+      left: 0;
+      &.landscapePassive {
+        left: -90vw;
       }
       transition: left 0.5s;
+    }
+
+    @media (orientation: portrait), (max-width: $mediaQueryWidth) {
+      width: $sidebarPortraitWidth;
+      left: -90vw;
+      &.portraitActive {
+        left: 0;
+      }
+      transition: left $transitionDuration;
     }
   
     .sidebar-name {
@@ -166,7 +190,6 @@ $sidebarPortraitWidth: 80vw;
 }
 
 
-
 ///////////////////////////////////
 //        Header Styles:         //
 ///////////////////////////////////
@@ -195,7 +218,7 @@ $sidebarPortraitWidth: 80vw;
   padding: 1rem;
   background-color: #f3e5be;
 
-  @media (orientation: landscape), (min-width: 1200px) {
+  @media (orientation: landscape), (min-width: $mediaQueryWidth) {
     // position: relative;
     
   }

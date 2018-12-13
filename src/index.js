@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
+import styles from './index.scss';
 
 
 function Header() {
@@ -12,13 +12,24 @@ function Header() {
 }
 
 function Sidebar(props) {
-  let bgClass = props.isActive ? 'sidebar-background active' : 'sidebar-background';
-  let contentClass = props.isActive ? 'sidebar-content active' : 'sidebar-content';
-  // Prevent body from scrolling when Sidebar is active:
-  document.body.classList.toggle('noScroll', props.isActive);
+  let sidebarClass = 'sidebar';
+  let bgClass = 'sidebar-background';
+  let contentClass = 'sidebar-content';
+
+  if (props.landscapePassive) {
+    sidebarClass += ' landscapePassive';
+    contentClass += ' landscapePassive';
+  }
+
+  if (props.portraitActive) {
+    bgClass += ' portraitActive';
+    contentClass += ' portraitActive';
+  }
+
+  document.body.classList.toggle('noScroll', props.portraitActive);
 
   return (
-    <div className='sidebar' onClick={props.onSideClick}>
+    <div className={sidebarClass} onClick={props.onSideClick}>
         <button className="sidebar-trigger" onClick={props.onClick}>
           &#9881;
         </button>
@@ -45,7 +56,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sidebarActive: false,
+      portraitActive: false,
+      landscapePassive: false,
       clientX: null,
       clientY: null,
     };
@@ -84,13 +96,22 @@ class App extends React.Component {
     let xDelta = event.touches[0].clientX - clientX;
     let yDelta = event.touches[0].clientY - clientY;
 
+    alert(xDelta);
     if ( Math.abs(xDelta) > Math.abs(yDelta) ) {
       // if xDelta > 0: right swipe
       if (xDelta > 0) {
-        this.setState({ sidebarActive: true });
+        if ( window.matchMedia("(orientation: landscape)").matches && window.innerWidth > styles.mediaQueryWidth) {
+          this.setState({ landscapePassive: true });
+        } else {
+          this.setState({ portraitActive: true });
+        }
       } else {
         // if xDelta < 0: left swipe
-        this.setState({ sidebarActive: false });
+        if ( window.matchMedia("(orientation: landscape)").matches && window.innerWidth > styles.mediaQueryWidth) {
+          this.setState({ landscapePassive: false });
+        } else {
+          this.setState({ portraitActive: false });
+        }
       }
     }
 
@@ -101,15 +122,31 @@ class App extends React.Component {
     event.preventDefault();
   }
 
+  toggleLandscape = () => {
+    this.setState({ landscapePassive: !this.state.landscapePassive });
+  }
+
+  togglePortrait = () => {
+    this.setState({ portraitActive: !this.state.portraitActive });
+  }
+
   handleClick = () => {
-    let sidebarActive = !this.state.sidebarActive;
-    this.setState({ sidebarActive });
+    if ( window.matchMedia("(orientation: landscape)").matches && window.innerWidth > styles.mediaQueryWidth) {
+      this.toggleLandscape();
+    } else {
+      this.togglePortrait();
+    }
   }
 
   handleSideClick = () => {
-    let sidebarActive = this.state.sidebarActive;
-    if (!sidebarActive) {
-      this.setState({ sidebarActive: !sidebarActive });
+    if ( window.matchMedia("(orientation: landscape)").matches && window.innerWidth > styles.mediaQueryWidth) {
+      if (this.state.landscapePassive) {
+        this.toggleLandscape();
+      }
+    } else {
+      if (!this.state.portraitActive) {
+        this.togglePortrait();
+      }
     }
   }
 
@@ -120,7 +157,8 @@ class App extends React.Component {
             onTouchMove={this.handleTouchMove} >
             
           <Header />
-          <Sidebar isActive={this.state.sidebarActive}
+          <Sidebar landscapePassive={this.state.landscapePassive}
+                   portraitActive={this.state.portraitActive}
                    onClick={this.handleClick}
                    onSideClick={this.handleSideClick} />
           <Content />
