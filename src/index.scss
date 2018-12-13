@@ -36,13 +36,26 @@ $sidebarFillColor: #250d0d;
 $sidebarFontColor: #7d4444;
 $sidebarLandscapeWidth: 40vw;
 $sidebarPortraitWidth: 80vw;
+$mediaQueryWidth: 1200px;
+:export {
+  mediaQueryWidth: 1200;
+}
 
 .sidebar {
   height: 100%;
-  width: $sidebarLandscapeWidth;
   background-color: $sidebarFillColor;
   grid-area: sidebar;
-  @media (orientation: portrait), (max-width: 1200px) {
+
+  @media (orientation: landscape), (min-width: $mediaQueryWidth) {
+    width: $sidebarLandscapeWidth;
+    transition: width 0.5s;
+    &.passive {
+      width: 0.5rem;
+      transition: width 0.5s;
+      cursor: pointer;
+    }
+  }
+  @media (orientation: portrait), (max-width: $mediaQueryWidth) {
     width: 0.5rem;
     cursor: pointer;
   }
@@ -67,10 +80,6 @@ $sidebarPortraitWidth: 80vw;
     outline: none;
     text-decoration: none;
     border: none;
-    // @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    //   // Chrome Specific:
-    //   border-bottom: 2px solid $sidebarFontColor;
-    // }
 
     &:hover {
       color: #f1f1f1;
@@ -83,7 +92,7 @@ $sidebarPortraitWidth: 80vw;
     }
   }
 
-  @media (orientation: portrait), (max-width: 1200px) {
+  @media (orientation: portrait), (max-width: $mediaQueryWidth) {
     .sidebar-background {
       position: fixed;
       top: 0;
@@ -108,7 +117,15 @@ $sidebarPortraitWidth: 80vw;
     top: 0;
     cursor: auto;
   
-    @media (orientation: portrait), (max-width: 1200px) {
+    @media (orientation: landscape), (min-width: $mediaQueryWidth) {
+      width: $sidebarLandscapeWidth;
+      left: 0;
+      &.passive {
+        left: -90vw;
+      }
+      transition: left 0.5s;
+    }
+    @media (orientation: portrait), (max-width: $mediaQueryWidth) {
       width: $sidebarPortraitWidth;
       left: -90vw;
       &.active {
@@ -195,7 +212,7 @@ $sidebarPortraitWidth: 80vw;
   padding: 1rem;
   background-color: #f3e5be;
 
-  @media (orientation: landscape), (min-width: 1200px) {
+  @media (orientation: landscape), (min-width: $mediaQueryWidth) {
     // position: relative;
     
   }

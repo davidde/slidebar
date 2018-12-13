@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
+import styles from './index.scss';
 
 
 function Header() {
@@ -12,13 +12,16 @@ function Header() {
 }
 
 function Sidebar(props) {
+  // 'active' class is used for portrait orientation,
+  // while 'passive' class is used for landscape:
+  let sidebarClass = props.isActive ? 'sidebar' : 'sidebar passive';
   let bgClass = props.isActive ? 'sidebar-background active' : 'sidebar-background';
-  let contentClass = props.isActive ? 'sidebar-content active' : 'sidebar-content';
+  let contentClass = props.isActive ? 'sidebar-content active' : 'sidebar-content passive';
   // Prevent body from scrolling when Sidebar is active:
   document.body.classList.toggle('noScroll', props.isActive);
 
   return (
-    <div className='sidebar' onClick={props.onSideClick}>
+    <div className={sidebarClass} onClick={props.onSideClick}>
         <button className="sidebar-trigger" onClick={props.onClick}>
           &#9881;
         </button>
@@ -49,6 +52,37 @@ class App extends React.Component {
       clientX: null,
       clientY: null,
     };
+  }
+
+  componentDidMount() {
+    // If in landscape:
+    if ( window.matchMedia("(orientation: landscape)").matches && window.innerWidth > styles.mediaQueryWidth) {
+      this.setState({ sidebarActive: true });
+    }
+    // Apparently, custom events don't support custom conditions to activate them,
+    // which makes things complicated if that's what you wanna do ...
+    // The first 'general' event sets up the second 'conditional' event:
+    window.addEventListener('resize', this.widthBreakpoint);
+    window.addEventListener("widthBP", this.toggleSidebar );  // Doesn't trigger reliably!
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.widthBreakpoint);
+    window.removeEventListener("widthBP", this.toggleSidebar );
+  }
+
+  toggleSidebar = () => {this.setState({ sidebarActive: !this.state.sidebarActive });}
+
+  widthBreakpoint() {
+    // console.log(window.innerWidth);  // = integer
+    // console.log(styles.mediaQueryWidth);  // = string
+    if (window.innerWidth == styles.mediaQueryWidth) {
+      // console.log('Toggle');
+      // Create the event
+      var event = new CustomEvent("widthBP");
+      // Dispatch/Trigger/Fire the event
+      window.dispatchEvent(event);
+    }
   }
 
   handleTouchStart = (event) => {
