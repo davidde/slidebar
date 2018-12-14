@@ -1,34 +1,4 @@
 //////////////////////////////////
-//        Global Styles:        //
-//////////////////////////////////
-html, body {
-  margin: 0;
-  padding: 0;
-  // Set body height to full screen or larger:
-  min-height: 100vh;
-  // Set body width to full screen max (no horizontal scroll):
-  max-width: 100vw;
-  .noScroll {
-    // Prevent scrolling when sidebar is showing
-    overflow: hidden;
-  }
-}
-
-#app {
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  grid-template-rows: minmax(min-content, max-content) 1fr;
-  grid-template-areas:  'sidebar  header'
-                        'sidebar  content';
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // Set div to full screen or larger:
-  min-height: 100vh;
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-}
-
-
-//////////////////////////////////
 //         Variables:           //
 //////////////////////////////////
 $sidebarFillColor: #250d0d;
@@ -47,6 +17,40 @@ $transitionDuration: 0.4s;
 $mediaQueryWidth: 1200px;
 :export {
   mediaQueryWidth: 1200;
+}
+
+
+//////////////////////////////////
+//        Global Styles:        //
+//////////////////////////////////
+html, body {
+  margin: 0;
+  padding: 0;
+  // Set body height to full screen or larger:
+  min-height: 100vh;
+  // Set body width to full screen max (no horizontal scroll):
+  max-width: 100vw;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    background-color: $contentFillColor;
+  .noScroll {
+    // Prevent scrolling when sidebar is showing
+    overflow: hidden;
+  }
+}
+
+#app {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: minmax(min-content, max-content) 1fr;
+  grid-template-areas:  'sidebar  header'
+                        'sidebar  content';
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // Set div to full screen or larger:
+  min-height: 100vh;
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 }
 
 
