@@ -6,7 +6,7 @@ import styles from './index.scss';
 function Header() {
   return (
     <div id="header">
-        <h2>Header here</h2>
+        Header here
     </div>
   );
 }

@@ -27,11 +27,22 @@ html, body {
 
 }
 
+
 //////////////////////////////////
-//       Sidebar Styles:        //
+//         Variables:           //
 //////////////////////////////////
-$sidebarFillColor: #250d0d;
-$sidebarFontColor: #7d4444;
+// $sidebarFillColor: #250d0d;
+// $sidebarFontColor: #7d4444;
+// $contentFillColor: #f3e5be;
+// $contentFontColor: #6e5d2e;
+$sidebarFillColor: #f3e5be;
+$sidebarFontColor: #6e5d2e;
+$sidebarHoverColor: #bba66d;
+$contentFillColor: #f5e1a1;
+$contentFontColor: #830602;
+$headerFillColor: #e9b554;
+$headerFontColor: #830602;//#c23700;
+
 $sidebarLandscapeWidth: 40vw;
 $sidebarPortraitWidth: 80vw;
 $transitionDuration: 0.5s;
@@ -40,10 +51,15 @@ $mediaQueryWidth: 1200px;
   mediaQueryWidth: 1200;
 }
 
+
+//////////////////////////////////
+//       Sidebar Styles:        //
+//////////////////////////////////
 .sidebar {
   grid-area: sidebar;
   height: 100%;
   background-color: $sidebarFillColor;
+  border-right: 2px solid $sidebarFontColor;
   
   @media (orientation: landscape), (min-width: $mediaQueryWidth) {
     width: $sidebarLandscapeWidth;
@@ -51,13 +67,13 @@ $mediaQueryWidth: 1200px;
     &.landscapePassive {
       cursor: pointer;
       width: 0.5rem;
-      transition: width $transitionDuration;
     }
   }
   
   @media (orientation: portrait), (max-width: $mediaQueryWidth) {
     width: 0.5rem;
     transition: width $transitionDuration;
+
     cursor: pointer;
   }
 
@@ -81,9 +97,10 @@ $mediaQueryWidth: 1200px;
     outline: none;
     text-decoration: none;
     border: none;
+    border-right: 2px solid $sidebarFontColor;
 
     &:hover {
-      color: #f1f1f1;
+      color: $sidebarHoverColor;
     }
     @media (hover: none) {
       // Prevent color change on touch devices:
@@ -116,7 +133,7 @@ $mediaQueryWidth: 1200px;
     position: fixed;
     top: 0;
     cursor: auto;
-  
+
     @media (orientation: landscape), (min-width: $mediaQueryWidth) {
       width: $sidebarLandscapeWidth;
       left: 0;
@@ -128,6 +145,7 @@ $mediaQueryWidth: 1200px;
 
     @media (orientation: portrait), (max-width: $mediaQueryWidth) {
       width: $sidebarPortraitWidth;
+
       left: -90vw;
       &.portraitActive {
         left: 0;
@@ -136,11 +154,11 @@ $mediaQueryWidth: 1200px;
     }
   
     .sidebar-name {
-      height: 2.9rem;
-      padding: 0.5rem 5rem 0.7rem 4.5rem;
+      height: 2.6rem;
+      padding: 0.8rem 5rem 0.7rem 4.5rem;
       margin: 0;
       color: $sidebarFontColor;
-      font-size: 2.5rem;
+      font-size: 2rem;
       text-align: center;
 
     }
@@ -169,7 +187,7 @@ $mediaQueryWidth: 1200px;
         cursor: pointer;
     
         &:hover {
-          color: #f1f1f1;
+          color: $sidebarHoverColor;
         }
         @media (hover: none) {
           // Prevent color change on touch devices:
@@ -191,20 +209,21 @@ $mediaQueryWidth: 1200px;
   grid-area: header;
   // Once a sticky element's parent goes out of view, the element will no longer stick!!!
   // => This is why we have to make sure its parent, the #app div grows along with its content:
-  // => min-height: 100vh;
+  // => #app { min-height: 100vh; }
   position: sticky;
   top: 0;
 
-  background-color: rgb(150, 221, 108);
-  border-bottom: 1px solid rgb(24, 170, 24);
-  height: 4.1rem;
-  padding: 0rem 1rem 0rem 4.5rem;
+  background-color: $headerFillColor;
+  color: $headerFontColor;
+  font-size: 2.5rem;
+  font-weight: bold;
+  border-bottom: 2px solid $headerFontColor;
+  height: 3.6rem;
+  padding: 0.5rem 1rem 0rem 4.5rem;
   margin: 0;
   overflow: hidden;
   white-space: nowrap;
   text-align: center;
-  color: yellow;
-
 }
 
 //////////////////////////////////
@@ -213,7 +232,8 @@ $mediaQueryWidth: 1200px;
 #content {
   grid-area: content;
   padding: 1rem;
-  background-color: #f3e5be;
+  background-color: $contentFillColor;
+  color: $contentFontColor;
 
   @media (orientation: landscape), (min-width: $mediaQueryWidth) {
     // position: relative;
