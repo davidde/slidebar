@@ -87,8 +87,8 @@ class App extends React.Component {
         return;
     }
 
-    if ( clientX > ((25/100) * (window.screen.width)) ) {
-      if ( !this.state.sidebarActive ) {
+    if ( Math.abs(clientX) > ((25/100) * (window.screen.width)) ) {
+      if ( !this.state.portraitActive ) {
         return;
       }
     }
@@ -96,7 +96,6 @@ class App extends React.Component {
     let xDelta = event.touches[0].clientX - clientX;
     let yDelta = event.touches[0].clientY - clientY;
 
-    alert(xDelta);
     if ( Math.abs(xDelta) > Math.abs(yDelta) ) {
       // if xDelta > 0: right swipe
       if (xDelta > 0) {
@@ -119,7 +118,7 @@ class App extends React.Component {
     clientY = null;
     this.setState({ clientX, clientY });
 
-    event.preventDefault();
+    //event.preventDefault();
   }
 
   toggleLandscape = () => {

@@ -21,9 +21,16 @@ html, body {
   // Set div to full screen:
   height: 100%;
   position: absolute;
-  @media (max-width: 302px) {
-    // Fix Chrome bug on very small desktop viewports:
-    position: static;
+  @media (-webkit-min-device-pixel-ratio: 0) {  // Chrome only:
+    // This doesn't work when there is more content displayed!
+    @media (max-width: 302px) {
+      // Fix Chrome 'position: sticky' bug on very small desktop portrait viewports:
+      position: static;
+    }
+    @media (orientation: landscape) and (max-height: 280px) {
+      // Fix Chrome 'position: sticky' bug on small mobile landscape viewports:
+      position: static;
+    }
   }
   top: 0;
   left: 0;
