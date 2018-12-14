@@ -31,21 +31,19 @@ html, body {
 //////////////////////////////////
 //         Variables:           //
 //////////////////////////////////
-// $sidebarFillColor: #250d0d;
-// $sidebarFontColor: #7d4444;
+$sidebarFillColor: #250d0d;
+$sidebarFontColor: #7d4444;
+$sidebarHoverColor: #f1f1f1;
 // $contentFillColor: #f3e5be;
 // $contentFontColor: #6e5d2e;
-$sidebarFillColor: #f3e5be;
-$sidebarFontColor: #6e5d2e;
-$sidebarHoverColor: #bba66d;
-$contentFillColor: #f5e1a1;
+$contentFillColor: #f3e5be;
 $contentFontColor: #830602;
-$headerFillColor: #e9b554;
-$headerFontColor: #830602;//#c23700;
+$headerFillColor: #ffd381;
+$headerFontColor: #830602;//#ff7c48;//#c23700;
 
 $sidebarLandscapeWidth: 40vw;
 $sidebarPortraitWidth: 80vw;
-$transitionDuration: 0.5s;
+$transitionDuration: 0.4s;
 $mediaQueryWidth: 1200px;
 :export {
   mediaQueryWidth: 1200;
