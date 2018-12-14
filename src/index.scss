@@ -4,7 +4,9 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  // Set body height to full screen or larger:
+  min-height: 100vh;
+  // Set body width to full screen max (no horizontal scroll):
   max-width: 100vw;
   .noScroll {
     // Prevent scrolling when sidebar is showing
@@ -18,25 +20,10 @@ html, body {
   grid-template-rows: minmax(min-content, max-content) 1fr;
   grid-template-areas:  'sidebar  header'
                         'sidebar  content';
-  // Set div to full screen:
-  height: 100%;
-  position: absolute;
-  @media (-webkit-min-device-pixel-ratio: 0) {  // Chrome only:
-    // This doesn't work when there is more content displayed!
-    @media (max-width: 302px) {
-      // Fix Chrome 'position: sticky' bug on very small desktop portrait viewports:
-      position: static;
-    }
-    @media (orientation: landscape) and (max-height: 280px) {
-      // Fix Chrome 'position: sticky' bug on small mobile landscape viewports:
-      position: static;
-    }
-  }
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  //////////////////////////
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // Set div to full screen or larger:
+  min-height: 100vh;
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 }
 
@@ -202,9 +189,12 @@ $mediaQueryWidth: 1200px;
 ///////////////////////////////////
 #header {
   grid-area: header;
+  // Once a sticky element's parent goes out of view, the element will no longer stick!!!
+  // => This is why we have to make sure its parent, the #app div grows along with its content:
+  // => min-height: 100vh;
   position: sticky;
   top: 0;
-  
+
   background-color: rgb(150, 221, 108);
   border-bottom: 1px solid rgb(24, 170, 24);
   height: 4.1rem;
